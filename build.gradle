@@ -1,0 +1,80 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+def commonsGroupId = 'ru.leonidm'
+def commonsArtifactId = 'CommonsM'
+def commonsVersion = '1.0'
+
+group commonsGroupId
+version commonsVersion
+
+repositories {
+    mavenCentral()
+}
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+tasks.withType(Javadoc).configureEach { options.encoding = 'UTF-8' }
+
+dependencies {
+    implementation 'org.jetbrains:annotations:24.0.1'
+
+    implementation 'org.apache.bcel:bcel:6.7.0'
+
+    implementation 'org.slf4j:slf4j-api:2.0.6'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compileClasspath
+    options {
+        setMemberLevel JavadocMemberLevel.PUBLIC
+        setAuthor true
+
+        links "https://docs.oracle.com/javase/8/docs/api/"
+    }
+}
+
+
+tasks.register('sourceJar', Jar) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allJava
+}
+
+tasks.register('packageJavadoc', Jar) {
+    archiveClassifier.set("javadoc")
+    from javadoc
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = commonsGroupId
+            artifactId = commonsArtifactId
+            version = commonsVersion
+
+            from components.java
+            artifact sourceJar
+            artifact packageJavadoc
+        }
+    }
+    repositories {
+        maven {
+            name = "smashUpRepository"
+            url "https://mvn.smashup.ru/releases"
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
