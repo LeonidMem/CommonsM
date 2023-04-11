@@ -73,7 +73,7 @@ public final class RRequest implements Cloneable {
     }
 
     @NotNull
-    public RResponse send(@NotNull Method method, boolean printException) {
+    public RResponse send(@NotNull Method method) {
         return send(method, (byte[]) null);
     }
 
