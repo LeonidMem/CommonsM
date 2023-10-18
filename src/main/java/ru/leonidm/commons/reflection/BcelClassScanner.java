@@ -505,7 +505,7 @@ public final class BcelClassScanner {
 
         public JarClassIterator(@NotNull JarFile jarFile) {
             this.entries = jarFile.entries();
-            nextElement = next();
+            next();
         }
 
         @Override

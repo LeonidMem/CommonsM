@@ -5,7 +5,7 @@ plugins {
 
 def commonsGroupId = 'ru.leonidm'
 def commonsArtifactId = 'CommonsM'
-def commonsVersion = '1.0.1'
+def commonsVersion = '1.0.2'
 
 group commonsGroupId
 version commonsVersion
